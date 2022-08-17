@@ -1,15 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-
-    
-
     private Board board;
-
     private int currentPlayer;
+
+    [SerializeField] private TextMeshProUGUI currentPlayerText;
 
     // Start is called before the first frame update
     void Start()
@@ -17,6 +16,7 @@ public class GameManager : MonoBehaviour
         board = GameObject.FindObjectOfType<Board>();
 
         currentPlayer = 1;
+        currentPlayerText.SetText("Player " + currentPlayer);
     }
 
     // Update is called once per frame
@@ -66,6 +66,8 @@ public class GameManager : MonoBehaviour
         {
             currentPlayer = 1;
         }
+
+        currentPlayerText.SetText("Player " + currentPlayer);
     }
 
 }
