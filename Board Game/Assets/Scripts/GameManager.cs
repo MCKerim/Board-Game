@@ -34,6 +34,11 @@ public class GameManager : MonoBehaviour
         NextPlayer();
     }
 
+    public void UseCardButtonPressed(int cardIndex)
+    {
+        NextPlayer();
+    }
+
     int buildingsPlaced = 0;
     public void FieldPressed(int x, int y)
     {
