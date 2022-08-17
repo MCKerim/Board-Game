@@ -200,14 +200,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32d448ab2cfdb274b92e0e84353a7a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingsPlayer1:
-  - {fileID: 7401375699399414281, guid: 484c3eec08e5b5d49813429c53fb0b92, type: 3}
-  - {fileID: 3390862757784213976, guid: e054d7140f9a8e94b982ca7b1637ba71, type: 3}
-  - {fileID: 2427623167688446287, guid: 53270ede774ba1c4590a2cd07417a1da, type: 3}
-  buildingsPlayer2:
-  - {fileID: 7112710446572299867, guid: 08d07a4f89b68044ab5b697586b87f91, type: 3}
-  - {fileID: 8937737910976360849, guid: 209dfaee669b17e49ac08b2f11644095, type: 3}
-  - {fileID: 4101704369297144896, guid: 9ced18eb9b463cb41ae3055ffcbdc5fa, type: 3}
 --- !u!4 &1314262366
 Transform:
   m_ObjectHideFlags: 0
@@ -572,9 +564,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Board
       objectReference: {fileID: 0}
+    - target: {fileID: 5133463866642566532, guid: 3fdaa12860d170147ad7f1bdb3e77b50, type: 3}
+      propertyPath: building
+      value: 
+      objectReference: {fileID: 951179499071120121, guid: 50b9c3bcf59715f469b9105a3a640825, type: 3}
     - target: {fileID: 7811552567242572891, guid: 3fdaa12860d170147ad7f1bdb3e77b50, type: 3}
       propertyPath: m_Name
       value: Field 0 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6746589822271858938, guid: 3fdaa12860d170147ad7f1bdb3e77b50, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 3fdaa12860d170147ad7f1bdb3e77b50, type: 3}

@@ -5,15 +5,18 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
 
-    [SerializeField] private GameObject[] buildingsPlayer1;
-    [SerializeField] private GameObject[] buildingsPlayer2;
+    
 
     private Board board;
+
+    private int currentPlayer;
 
     // Start is called before the first frame update
     void Start()
     {
         board = GameObject.FindObjectOfType<Board>();
+
+        currentPlayer = 1;
     }
 
     // Update is called once per frame
@@ -22,15 +25,46 @@ public class GameManager : MonoBehaviour
         
     }
 
+    int buildingsPlaced = 0;
+
     public void FieldPressed(int x, int y)
     {
         if (board.CheckIfFieldIsFree(x, y))
         {
-            board.PlaceBuilding(buildingsPlayer1[2], x, y);
+            if(board.CheckIfFieldIsValidForPlayerToBuild(currentPlayer, x, y) || buildingsPlaced < 2)
+            {
+                board.PlaceBuilding(false, currentPlayer, 0, x, y);
+                NextPlayer();
+                buildingsPlaced++;
+            }
+            return;
         }
-        else
+
+        if (board.CheckIfFieldIsObstacle(x, y))
         {
-            board.DestroyBuilding(x, y);
+            return;
+        }
+
+        if(board.GetPlayerOfBuilding(x, y) == currentPlayer)
+        {
+            if(board.GetLevelOfBuilding(x, y) < 2)
+            {
+                board.LevelUpBuilding(x, y);
+                NextPlayer();
+            }
+            return;
+        }
+    }
+
+    private void NextPlayer()
+    {
+        if(currentPlayer == 1)
+        {
+            currentPlayer = 2;
+        }
+        else if(currentPlayer == 2)
+        {
+            currentPlayer = 1;
         }
     }
 
