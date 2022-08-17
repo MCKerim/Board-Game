@@ -14,21 +14,24 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         board = GameObject.FindObjectOfType<Board>();
-
-        if (board.CheckIfFieldIsFree(1, 2))
-        {
-            board.PlaceBuilding(buildingsPlayer1[0], 1, 2);
-        }
-
-        
-        //board.DestroyBuilding(1, 2);
-        //board.PlaceBuilding(buildingsPlayer2[1], 0, 0);
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public void FieldPressed(int x, int y)
+    {
+        if (board.CheckIfFieldIsFree(x, y))
+        {
+            board.PlaceBuilding(buildingsPlayer1[2], x, y);
+        }
+        else
+        {
+            board.DestroyBuilding(x, y);
+        }
     }
 
 }
