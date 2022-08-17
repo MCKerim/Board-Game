@@ -12,13 +12,16 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI currentPlayerText;
 
-    private bool listenForFieldPresses = true;
+    private GameManagerState currentState;
+
+    private Card[,] playerCards = new Card[2, 3];
 
     // Start is called before the first frame update
     void Start()
     {
         board = GameObject.FindObjectOfType<Board>();
 
+        currentState = GameManagerState.Default;
         currentPlayer = 1;
         UpdateCurrentPlayerText();
     }
@@ -31,18 +34,33 @@ public class GameManager : MonoBehaviour
 
     public void DrawCardButonPressed()
     {
+        if (currentState != GameManagerState.Default)
+        {
+            return;
+        }
+
         NextPlayer();
     }
 
     public void UseCardButtonPressed(int cardIndex)
     {
-        NextPlayer();
+        if (currentState != GameManagerState.Default)
+        {
+            return;
+        }
+
+        playerCards[currentPlayer - 1, cardIndex].Use();
+    }
+
+    public void ChangeState(GameManagerState state)
+    {
+        currentState = state;
     }
 
     int buildingsPlaced = 0;
     public void FieldPressed(int x, int y)
     {
-        if (!listenForFieldPresses)
+        if (currentState != GameManagerState.Default)
         {
             return;
         }
