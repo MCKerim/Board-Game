@@ -11,10 +11,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Color[] playerColors;
 
     [SerializeField] private TextMeshProUGUI currentPlayerText;
+    [SerializeField] private TextMeshProUGUI currentStateText;
 
     private GameManagerState currentState;
 
-    private Card[,] playerCards = new Card[2, 3];
+    private ICard[,] playerCards = new ICard[2, 3];
+
+    [SerializeField] private DestroyBuildingCard destroyBuildingCard;
+
+    [SerializeField] private TextMeshProUGUI[] cardTexts;
 
     // Start is called before the first frame update
     void Start()
@@ -39,7 +44,16 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        NextPlayer();
+        for(int i=0; i < 3; i++)
+        {
+            if(playerCards[currentPlayer - 1, i] == null)
+            {
+                playerCards[currentPlayer - 1, i] = destroyBuildingCard;
+                cardTexts[(currentPlayer - 1) * 3 + i].SetText(destroyBuildingCard.GetDescription());
+                NextPlayer();
+                return;
+            }
+        }
     }
 
     public void UseCardButtonPressed(int cardIndex)
@@ -49,46 +63,75 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        if (playerCards[currentPlayer - 1, cardIndex] == null)
+        {
+            return;
+        }
+
         playerCards[currentPlayer - 1, cardIndex].Use();
+        playerCards[currentPlayer - 1, cardIndex] = null;
+        cardTexts[(currentPlayer - 1) * 3 + cardIndex].SetText("Empty");
     }
 
     public void ChangeState(GameManagerState state)
     {
         currentState = state;
+        UpdateCurrentStateText();
     }
+
+    private void UpdateCurrentStateText()
+    {
+        switch (currentState){
+            case GameManagerState.Default:
+                currentStateText.SetText("Build / Draw Card / Use Card");
+                break;
+            case GameManagerState.PlayerChooseBuildingToDestroy:
+                currentStateText.SetText("Choose Building to Destroy");
+                break;
+        }
+    }
+
+
 
     int buildingsPlaced = 0;
     public void FieldPressed(int x, int y)
     {
-        if (currentState != GameManagerState.Default)
+        if (currentState == GameManagerState.Default)
         {
-            return;
-        }
-
-        if (board.CheckIfFieldIsFree(x, y))
-        {
-            if(board.CheckIfFieldIsValidForPlayerToBuild(currentPlayer, x, y) || buildingsPlaced < 2)
+            if (board.CheckIfFieldIsFree(x, y))
             {
-                board.PlaceBuilding(false, currentPlayer, 0, x, y);
-                NextPlayer();
-                buildingsPlaced++;
+                if (board.CheckIfFieldIsValidForPlayerToBuild(currentPlayer, x, y) || buildingsPlaced < 2)
+                {
+                    board.PlaceBuilding(false, currentPlayer, 0, x, y);
+                    NextPlayer();
+                    buildingsPlaced++;
+                }
+                return;
             }
-            return;
-        }
 
-        if (board.CheckIfFieldIsObstacle(x, y))
-        {
-            return;
-        }
-
-        if(board.GetPlayerOfBuilding(x, y) == currentPlayer)
-        {
-            if(board.GetLevelOfBuilding(x, y) < 2)
+            if (board.CheckIfFieldIsObstacle(x, y))
             {
-                board.LevelUpBuilding(x, y);
+                return;
+            }
+
+            if (board.GetPlayerOfBuilding(x, y) == currentPlayer)
+            {
+                if (board.GetLevelOfBuilding(x, y) < 2)
+                {
+                    board.LevelUpBuilding(x, y);
+                    NextPlayer();
+                }
+                return;
+            }
+        }
+        else if(currentState == GameManagerState.PlayerChooseBuildingToDestroy)
+        {
+            if(!board.CheckIfFieldIsFree(x, y) && !board.CheckIfFieldIsObstacle(x, y) && board.GetPlayerOfBuilding(x, y) != currentPlayer)
+            {
+                board.DestroyBuilding(x, y);
+                ChangeState(GameManagerState.Default);
                 NextPlayer();
             }
-            return;
         }
     }
 

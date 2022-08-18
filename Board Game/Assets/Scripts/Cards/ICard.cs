@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface Card
+public interface ICard
 {
     void Use();
+    string GetDescription();
 }
